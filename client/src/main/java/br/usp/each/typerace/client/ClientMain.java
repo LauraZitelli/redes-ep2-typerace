@@ -16,7 +16,7 @@ public class ClientMain {
         this.client = client;
     }
 
-    public void init(Integer clientId) {
+    public void init(String clientId) {
         System.out.println("Iniciando cliente: " + clientId);
         client.connect();
     }
@@ -33,14 +33,21 @@ public class ClientMain {
            Como podemos fazer para que o cliente receba um parâmetro indicando a qual servidor
            ele deve se conectar e o seu ID?
         */
-        String removeMe = "ws://localhost:8080";
-        Integer clientId = 0;
+        String url = "ws://localhost:8080";
+        String nome;
 
         try {
-            WebSocketClient client = new Client(new URI(removeMe));
-
+            WebSocketClient client = new Client(new URI(url));
             ClientMain main = new ClientMain(client);
-            main.init(clientId);
+
+            System.out.println("Qual é o seu nickname?");
+            nome = sc.nextLine();
+
+            if (nome.isEmpty()) {
+                System.out.println("Nickname vazio. Informe um nick válido.");
+            }
+
+            main.init(nome);
 
             System.out.println("Digite o comando que deseja executar");
             System.out.println("Digite 'help' para visualizar os comandos disponíveis");
@@ -55,10 +62,22 @@ public class ClientMain {
                     client.send("START");
                     break;
                 case "quit":
-                    System.out.println("SAIU");
+                    client.send("QUIT");
                     break;
                 default:
-                    System.out.println("Comando invalido, tente novamente!");
+                    System.out.println("Comando inválido. Digite 'help' para ver a lista de comandos válidos!");
+            }
+
+            while(true) {
+                String texto = sc.nextLine();
+                if(texto.length() > 0)
+                {
+                    if(texto.equalsIgnoreCase("quit")) {
+                        client.close();
+                        break;
+                    }
+                    client.send(texto);
+                }
             }
 
         } catch (URISyntaxException e) {

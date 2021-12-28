@@ -13,8 +13,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        send("Hello, it is me. Mario :)");
-        System.out.println("new connection opened");
+        System.out.println("Conexão ao servidor iniciada.");
     }
 
     @Override
@@ -28,7 +27,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Server closed with exit code " + code);
+        System.out.println("Servidor desconectou com o código de saída " + code);
     }
 
     @Override
