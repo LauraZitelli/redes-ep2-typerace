@@ -13,17 +13,22 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        // TODO: Implementar
+        send("Hello, it is me. Mario :)");
+        System.out.println("new connection opened");
     }
 
     @Override
     public void onMessage(String message) {
-        // TODO: Implementar
+        if(message.contains("COMEÇOU") || message.contains("Bem vindo ao servidor!") || message.contains("Jogador")) {
+            System.out.println(message);
+        } else {
+            System.out.println("Digite a palavra: " + message);
+        }
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        // TODO: Implementar
+        System.out.println("Server closed with exit code " + code);
     }
 
     @Override

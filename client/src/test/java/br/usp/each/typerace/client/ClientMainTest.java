@@ -22,7 +22,7 @@ class ClientMainTest {
 
     @Test
     void deveSeConectarAUmServidor() {
-        subject.init("testId");
+        subject.init(1);
 
         verify(clientMock).connect();
     }

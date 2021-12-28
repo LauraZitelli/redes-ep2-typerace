@@ -14,7 +14,7 @@ public class ServerMain {
 
     public void init() {
         System.out.println("Iniciando servidor...");
-        // TODO: Implementar
+        server.run();
     }
 
     public static void main(String[] args) {
