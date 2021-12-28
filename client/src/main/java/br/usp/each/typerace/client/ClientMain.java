@@ -4,7 +4,6 @@ import org.java_websocket.client.WebSocketClient;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class ClientMain {
@@ -16,15 +15,9 @@ public class ClientMain {
         this.client = client;
     }
 
-    public void init(Integer clientId) {
+    public void init(String clientId) {
         System.out.println("Iniciando cliente: " + clientId);
         client.connect();
-    }
-
-    private static void availableCommands(){
-        System.out.println("1. start      ()");
-        System.out.println("2. quit      ()");
-        System.out.println("3. help     ()");
     }
 
     public static void main(String[] args) {
@@ -33,32 +26,27 @@ public class ClientMain {
            Como podemos fazer para que o cliente receba um parâmetro indicando a qual servidor
            ele deve se conectar e o seu ID?
         */
-        String removeMe = "ws://localhost:8080";
-        Integer clientId = 0;
+        String url = "ws://localhost:8080";
+        String nome;
 
         try {
-            WebSocketClient client = new Client(new URI(removeMe));
+            System.out.println("Qual é o seu nickname?");
+            nome = sc.nextLine();
 
+            if (nome.isEmpty()) {
+                System.out.println("Nickname vazio. Informe um nick válido.");
+            }
+
+            WebSocketClient client = new Client(new URI(url + "/" + nome));
             ClientMain main = new ClientMain(client);
-            main.init(clientId);
+            main.init(nome);
 
-            System.out.println("Digite o comando que deseja executar");
-            System.out.println("Digite 'help' para visualizar os comandos disponíveis");
-
-            String cmd = sc.nextLine();
-
-            switch (cmd.toLowerCase(Locale.ROOT)) {
-                case "help":
-                    availableCommands();
-                    break;
-                case "start":
-                    client.send("START");
-                    break;
-                case "quit":
-                    System.out.println("SAIU");
-                    break;
-                default:
-                    System.out.println("Comando invalido, tente novamente!");
+            while(true) {
+                String texto = sc.nextLine();
+                if(texto.length() > 0)
+                {
+                    client.send(texto);
+                }
             }
 
         } catch (URISyntaxException e) {

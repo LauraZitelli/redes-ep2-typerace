@@ -18,19 +18,4 @@ public class Competidor {
         return id;
     }
 
-//    public int getAcertos() {
-//        return acertos;
-//    }
-//
-//    public void incrementaAcertos() {
-//        this.acertos++;
-//    }
-//
-//    public int getErros() {
-//        return erros;
-//    }
-//
-//    public void incrementaErros() {
-//        this.erros++;
-//    }
 }
