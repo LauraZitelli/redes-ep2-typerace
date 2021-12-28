@@ -18,7 +18,8 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        if(message.contains("COMEÇOU") || message.contains("Bem vindo ao servidor!") || message.contains("Jogador")) {
+        if(message.contains("COMEÇOU") || message.contains("Bem vindo ao servidor!") || message.contains("Jogador")
+                || message.contains("Pontos") || message.contains("Há") || message.contains("VENCEU")) {
             System.out.println(message);
         } else {
             System.out.println("Digite a palavra: " + message);

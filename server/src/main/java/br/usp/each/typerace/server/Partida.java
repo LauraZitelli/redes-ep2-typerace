@@ -7,7 +7,6 @@ public class Partida {
     private Map<String, Competidor> competidores;
     public String[] listaDePalavrasDaPartida;
     public boolean comecouPartida;
-    private static final int maxScore = 3;
     public static long tempoInicio;
     public static long tempoFim;
 
