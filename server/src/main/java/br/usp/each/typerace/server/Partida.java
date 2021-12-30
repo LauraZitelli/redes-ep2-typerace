@@ -29,4 +29,12 @@ public class Partida {
         return tempoFim - tempoInicio;
     }
 
+    public long tempoAteAgora() {
+        return System.currentTimeMillis() - this.tempoInicio;
+    }
+
+    public Map<String, Competidor> getCompetidores() {
+        return this.competidores;
+    }
+
 }

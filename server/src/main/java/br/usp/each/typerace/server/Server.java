@@ -119,6 +119,12 @@ public class Server extends WebSocketServer {
         return palavras.iniciaLista(tamanho);
     }
 
+    public void mostraPlacar(Map<String, Integer> competidores) {
+         Placar placar = new Placar(this.partida, competidores, quantidadePalavras);
+         int numeroPalavras = quantidadePalavras;
+         placar.imprimirRankingEDuracao(numeroPalavras, partida);
+    }
+
     private void desconectaJogador(WebSocket conn, String idCliente) {
         connections.remove(idCliente);
 //        trSession.removePlayerFromSessionById(playerId);
