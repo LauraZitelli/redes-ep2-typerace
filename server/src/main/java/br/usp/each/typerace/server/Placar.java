@@ -24,7 +24,7 @@ public class Placar{
         Collections.sort(lista, new Comparator<Map.Entry<String, Integer>>() {
             public int compare(Map.Entry<String, Integer> a,
                             Map.Entry<String, Integer> b) {
-                return (a.getValue() - b.getValue());
+                return (b.getValue() - a.getValue());
             }
         });
 
@@ -38,16 +38,8 @@ public class Placar{
 
     }
 
-    public void imprimirRankingEDuracao(int numeroPalavras, Partida partida) {
-        for (Map.Entry<String, Integer> entrada : this.colocacao.entrySet()) {
-            System.out.println("Jogador: " + entrada.getKey()
-                    + " Acertos: " + entrada.getValue() + " Erros: " + (numeroPalavras - entrada.getValue() + "Duração: " + partida.tempoAteAgora()));
-        }
+    public Map<String, Integer> getColocacao() {
+        return colocacao;
     }
-
-    
-
-
-
 
 }

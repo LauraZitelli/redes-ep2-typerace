@@ -30,10 +30,10 @@ public class Partida {
     }
 
     public long tempoAteAgora() {
-        return System.currentTimeMillis() - this.tempoInicio;
+        return System.currentTimeMillis() - tempoInicio;
     }
 
-    public Map<String, Competidor> getCompetidores() {
+    public Map<String, Integer> getCompetidores() {
         return this.competidores;
     }
 
