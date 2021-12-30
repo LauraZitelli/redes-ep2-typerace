@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Partida {
-    private Map<String, Competidor> competidores;
+    private Map<String, Integer> competidores;
     public String[] listaDePalavrasDaPartida;
     public boolean comecouPartida;
     public static long tempoInicio;
     public static long tempoFim;
 
     public Partida() {
-        this.competidores = new HashMap<String, Competidor>();
+        this.competidores = new HashMap<String, Integer>();
         this.comecouPartida = false;
     }
 
