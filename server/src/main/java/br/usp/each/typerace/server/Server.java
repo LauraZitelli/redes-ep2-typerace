@@ -11,7 +11,7 @@ public class Server extends WebSocketServer {
 
     private final Map<String, WebSocket> connections;
     public Map<String, Integer> competidores = new HashMap<String, Integer>();
-    public Map<String, String[]> listaCompetidor = new HashMap<String, String[]>();
+    public Map<String, String[]> listaPalavrasCompetidor = new HashMap<String, String[]>();
     public String idCliente;
     private final Partida partida = new Partida();
     private static final int quantidadePalavras = 8;
@@ -26,11 +26,12 @@ public class Server extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         idCliente = conn.getResourceDescriptor().split("/")[1];
         if(connections.containsKey(idCliente)) {
-            System.out.println("TE VIRA NEGO");
+            System.out.println("Este nome já existe. Escolha um novo nickname!");
         } else {
             conn.send("Bem vindo ao servidor!\n"); //This method sends a message to the new client
             connections.put(idCliente, conn);
             competidores.put(idCliente, 0);
+
             broadcast("Jogador " + idCliente + " entrou na partida!\n");
             broadcast("Há " + connections.size() + " jogadores na partida.\n");
             System.out.println("Nova conexão ao cliente " + idCliente + " de endereço " + conn.getRemoteSocketAddress());
@@ -76,7 +77,6 @@ public class Server extends WebSocketServer {
         broadcast("COMEÇOU:\n ");
         partida.comecouPartida = true;
         partida.listaDePalavrasDaPartida = iniciaLista(quantidadePalavras);
-        listaCompetidor.put(idCliente, partida.listaDePalavrasDaPartida);
 
         for (int i = 0; i < partida.listaDePalavrasDaPartida.length; i++) {
             broadcast(partida.listaDePalavrasDaPartida[i]);
@@ -84,12 +84,17 @@ public class Server extends WebSocketServer {
     }
 
     public void avaliacao(String idCliente, String mensagem) {
+        if(!listaPalavrasCompetidor.containsKey(idCliente)) {
+            System.out.println("ENTROU AQUI!");
+            listaPalavrasCompetidor.put(idCliente, partida.listaDePalavrasDaPartida);
+        }
         if(competidores.get(idCliente) == quantidadeAcertos) {
             broadcast(idCliente + " VENCEU!!!!!");
+            partida.terminarPartida();
             return;
         }
-        for (int i = 0; i <= listaCompetidor.get(idCliente).length -1; i++) {
-            if(listaCompetidor.get(idCliente)[i].contains(mensagem)) {
+        for (int i = 0; i <= (listaPalavrasCompetidor.get(idCliente).length) - 1; i++) {
+            if(listaPalavrasCompetidor.get(idCliente)[i].contains(mensagem)) {
                 adicionaPontos(idCliente);
                 removePalavra(idCliente, mensagem);
             }
@@ -103,15 +108,12 @@ public class Server extends WebSocketServer {
     }
 
     public void removePalavra(String idCliente, String mensagem) {
-        String[] listaDoCompetidor = listaCompetidor.get(idCliente);
+        String[] listaDoCompetidor = listaPalavrasCompetidor.get(idCliente);
         List<String> list = new ArrayList<String>(Arrays.asList(listaDoCompetidor));
         list.remove(mensagem);
         listaDoCompetidor = list.toArray(new String[0]);
 
-        listaCompetidor.put(idCliente, listaDoCompetidor);
-        for(int i=0; i<= listaCompetidor.get(idCliente).length-1; i++) {
-            System.out.println("Lista Atualizada do jogador " + idCliente + " :" + listaCompetidor.get(idCliente)[i]);
-        }
+        listaPalavrasCompetidor.put(idCliente, listaDoCompetidor);
     }
 
     public String[] iniciaLista(int tamanho) {
@@ -127,7 +129,9 @@ public class Server extends WebSocketServer {
 
     private void desconectaJogador(WebSocket conn, String idCliente) {
         connections.remove(idCliente);
-//        trSession.removePlayerFromSessionById(playerId);
+        listaPalavrasCompetidor.remove(idCliente);
+        competidores.remove(idCliente);
+
         System.out.println("ID Cliente " + idCliente);
         conn.close();
         broadcast("Jogador " + idCliente + " abandonou a partida.\n");
