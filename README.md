@@ -2,7 +2,7 @@
 Repositório para o EP2 de Redes de Computadores, EACH-USP - 2021/2
 
 # Integrantes
-* Fernanda Elimelek - 
+* Fernanda Elimelek - 11208155
 * Laura Zitelli de Souza - 11207814
 * Vitória Gonçalves Lorentz - 11319020
 
