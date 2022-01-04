@@ -26,9 +26,10 @@ public class Server extends WebSocketServer {
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         idCliente = conn.getResourceDescriptor().split("/")[1];
         if(connections.containsKey(idCliente)) {
-            System.out.println("Este nome já existe. Escolha um novo nickname!");
+            conn.send("Este nome já existe. Escolha um novo nickname!");
+            conn.close(4000, "Nickname já existe");
         } else {
-            conn.send("Bem vindo ao servidor!\n"); //This method sends a message to the new client
+            conn.send("Bem vindo ao servidor!\n");
             connections.put(idCliente, conn);
             competidores.put(idCliente, 0);
 
@@ -85,13 +86,13 @@ public class Server extends WebSocketServer {
 
     public void avaliacao(String idCliente, String mensagem) {
         if(!listaPalavrasCompetidor.containsKey(idCliente)) {
-            System.out.println("ENTROU AQUI!");
             listaPalavrasCompetidor.put(idCliente, partida.listaDePalavrasDaPartida);
         }
         if(competidores.get(idCliente) == quantidadeAcertos) {
             partida.terminarPartida();
             broadcast("Partida finalizada\n" + idCliente + " VENCEU!!!!!\n");
             mostraPlacar(competidores);
+
             return;
         }
         for (int i = 0; i <= (listaPalavrasCompetidor.get(idCliente).length) - 1; i++) {
@@ -100,6 +101,7 @@ public class Server extends WebSocketServer {
                 removePalavra(idCliente, mensagem);
             } else if (mensagem.equals("-p")) {
                 mostraPlacar(competidores);
+                break;
             }
         }
         System.out.println("Pontos do jogador " + idCliente + " :" + competidores.get(idCliente));
@@ -151,7 +153,7 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        // TODO: Implementar
+        System.out.println(ex);
     }
 
     @Override
