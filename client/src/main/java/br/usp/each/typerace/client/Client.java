@@ -19,7 +19,7 @@ public class Client extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         if(message.contains("COMEÇOU") || message.contains("Bem vindo ao servidor!") || message.contains("Jogador")
-                || message.contains("Pontos") || message.contains("Há") || message.contains("VENCEU") || message.contains("Acertos") || message.contains("Erros") || message.contains("Partida") ||  message.contains("\n") ||  message.contains("Ranking") ||  message.contains("Duração")){
+                || message.contains("Pontos") || message.contains("Há") || message.contains("VENCEU") || message.contains("Acertos") || message.contains("Erros") || message.contains("Partida") ||  message.contains("\n") ||  message.contains("Ranking") ||  message.contains("Duração") || message.contains("Este")){
             System.out.println(message);
         } else {
             System.out.println("Digite a palavra: " + message);
@@ -28,11 +28,14 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Servidor desconectou com o código de saída " + code);
+        if (code == 4000) {
+            System.out.println("Finalizando sessão");
+            System.exit(0);
+        }
     }
 
     @Override
     public void onError(Exception ex) {
-        // TODO: Implementar
+        System.out.println(ex);
     }
 }
