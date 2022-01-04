@@ -34,7 +34,11 @@ public class Server extends WebSocketServer {
             competidores.put(idCliente, 0);
 
             broadcast("Jogador " + idCliente + " entrou na partida!\n");
-            broadcast("Há " + connections.size() + " jogadores na partida.\n");
+            if(connections.size() == 1) {
+                broadcast("Há " + connections.size() + " jogador na partida.\n");
+            } else {
+                broadcast("Há " + connections.size() + " jogadores na partida.\n");
+            }
             System.out.println("Nova conexão ao cliente " + idCliente + " de endereço " + conn.getRemoteSocketAddress());
         }
     }
@@ -48,11 +52,11 @@ public class Server extends WebSocketServer {
         System.out.println("1. start");
         System.out.println("2. quit");
         System.out.println("3. help");
+        System.out.println("4. -p");
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        System.out.println("Mensagem recebida de "	+ conn.getRemoteSocketAddress() + ": " + message);
         idCliente = conn.getResourceDescriptor().split("/")[1];
         if (!partida.comecouPartida) {
             switch (message.toLowerCase(Locale.ROOT)) {
@@ -76,7 +80,7 @@ public class Server extends WebSocketServer {
 
     public void iniciaJogo() {
         broadcast("COMEÇOU:\n ");
-        partida.comecouPartida = true;
+        partida.comecarPartida();
         partida.listaDePalavrasDaPartida = iniciaLista(quantidadePalavras);
 
         for (int i = 0; i < partida.listaDePalavrasDaPartida.length; i++) {
@@ -90,9 +94,8 @@ public class Server extends WebSocketServer {
         }
         if(competidores.get(idCliente) == quantidadeAcertos) {
             partida.terminarPartida();
-            broadcast("Partida finalizada\n" + idCliente + " VENCEU!!!!!\n");
+            broadcast("\n\nPartida finalizada\n" + idCliente + " VENCEU!!!!!\n");
             mostraPlacar(competidores);
-
             return;
         }
         for (int i = 0; i <= (listaPalavrasCompetidor.get(idCliente).length) - 1; i++) {
@@ -128,8 +131,7 @@ public class Server extends WebSocketServer {
 
     public void mostraPlacar(Map<String, Integer> competidores) {
          Placar placar = new Placar(this.partida, competidores, quantidadePalavras);
-         int numeroPalavras = quantidadePalavras;
-         imprimirRankingEDuracao(numeroPalavras, this.partida, placar);
+         imprimirRankingEDuracao(quantidadePalavras, this.partida, placar);
     }
 
     public void imprimirRankingEDuracao(int numeroPalavras, Partida partida, Placar placar) {
@@ -138,7 +140,7 @@ public class Server extends WebSocketServer {
             broadcast("Jogador: " +  entrada.getKey()
                     + " Acertos: " + entrada.getValue() + " Erros: " + (numeroPalavras - entrada.getValue()));
         }
-        broadcast("Duração: " + partida.tempoAteAgora() + "ms");
+        broadcast("Duração: " + partida.tempoAteAgora()/1000 + "s");
     }
 
     private void desconectaJogador(WebSocket conn, String idCliente) {
