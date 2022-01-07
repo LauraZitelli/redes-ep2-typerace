@@ -138,7 +138,7 @@ public class Server extends WebSocketServer {
         broadcast("Ranking: ");
         for (Map.Entry<String, Integer> entrada : placar.getColocacao().entrySet()) {
             broadcast("Jogador: " +  entrada.getKey()
-                    + " Acertos: " + entrada.getValue() + " Erros: " + (numeroPalavras - entrada.getValue()));
+                    + " Acertos: " + entrada.getValue() + " Palavras faltantes " + (numeroPalavras - entrada.getValue()));
         }
         broadcast("Duração: " + partida.tempoAteAgora()/1000 + "s");
     }
